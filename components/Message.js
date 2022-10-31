@@ -5,16 +5,18 @@ import moment from "moment";
 
 function Message({ user, message }) {
 	const [userLoggedIn] = useAuthState(auth);
-	
+
 	const TypeOfMessage = user === userLoggedIn.email ? Sender : Reciever;
-	
 
 	return (
 		<Container>
 			<TypeOfMessage>
 				{message.message}
+
 				<span>
-					{message.timestamp ? moment(message.timestamp).format('LT') : '...'}
+					{message.timestamp
+						? moment(message.timestamp).format("LT")
+						: "..."}
 				</span>
 			</TypeOfMessage>
 		</Container>
@@ -27,6 +29,7 @@ const Container = styled.div``;
 
 const MessageElement = styled.p`
 	width: fit-content;
+	max-width: 60%;
 	padding: 15px 20px;
 	border-radius: 8px;
 	margin: 10px;
@@ -38,31 +41,60 @@ const MessageElement = styled.p`
 const Sender = styled(MessageElement)`
 	margin-left: auto;
 	background-color: #8bbef0;
-	span {
-		color: #1f4f80;
-		font-size: 9px;
-		padding:4px 7px;
+	border-radius: 10px 0 10px 10px;
+	&:before {
+		content: "";
 		position: absolute;
-		bottom: 0;
-		text-align: right;
-		right: 0px;
+		top: 0;
+		right: -15px;
+		width: 0;
+		height: 0;
+		border-top: 15px solid transparent;
+		border-bottom: 15px solid transparent;
+		border-left: 15px solid #8bbef0;
+	}
+	box-shadow: -23px 3px 36px -11px rgba(0, 0, 0, 0.26);
+	span {
+		color: gray;
+		padding: 10px;
+		font-size: 9px;
+		position: absolute;
+		text-align: left;
+		left: -50px;
 	}
 `;
 
 const Reciever = styled(MessageElement)`
 	text-align: left;
 	background-color: whitesmoke;
+	border-radius: 0 10px 10px 10px;
+	box-shadow: 27px -3px 36px -11px rgba(0, 0, 0, 0.26);
+	&:before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: -15px;
+		width: 0;
+		height: 0;
+		border-top: 15px solid transparent;
+		border-bottom: 15px solid transparent;
+		border-right: 15px solid whitesmoke;
+	}
 	span {
 		color: gray;
+		padding: 10px;
 		font-size: 9px;
-		padding:4px 15px;
 		position: absolute;
-		bottom: 0;
 		text-align: right;
-		right: 0px;
+		right: -50px;
 	}
 `;
 
 const Timestamp = styled.span`
-
+	color: gray;
+	padding: 10px;
+	font-size: 9px;
+	position: absolute;
+	text-align: right;
+	right: 0;
 `;

@@ -89,6 +89,10 @@ const SearchInput = styled.input`
 	outline-width: 0;
 	border: none;
 	flex: 1;
+	:focus {
+		border: none;
+		outline: none;
+	}
 `;
 
 const Container = styled.div`

@@ -76,8 +76,19 @@ function ChatScreen({ chat, messages }) {
 	const recepientName = recepient?.displayName;
 	
 	// ago format using moment
-	const recepientLastSeen = recepient?.lastSeen;
-	const lastSeen = recepientLastSeen ? moment(recepientLastSeen).fromNow() : "";
+	let lastSeenTimestamp = recepient?.lastSeen;
+	// if lastSeenTimestamp is an object
+	if (lastSeenTimestamp?.toDate) {
+		lastSeenTimestamp = lastSeenTimestamp.toDate();
+	}
+	const lastSeen = lastSeenTimestamp ? moment(lastSeenTimestamp).fromNow() : "Unavailable";
+	// TODO: when user receives a message, scroll to bottom
+	const shouldScrollToBottom = () => {
+		if (endOfMessagesRef.current) {
+			scrollToBottom();
+		}
+	};
+	setTimeout(shouldScrollToBottom, 1000);
 	
 
 	return (
