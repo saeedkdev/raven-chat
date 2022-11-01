@@ -21,6 +21,8 @@ import Message from "./Message";
 import getRecepientEmail from "../utils/getRecepientEmail";
 import moment from "moment";
 import EmojiPicker from "emoji-picker-react";
+import { storage } from "../firebase";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 function ChatScreen({ chat, messages }) {
 	const [user] = useAuthState(auth);
@@ -128,6 +130,27 @@ function ChatScreen({ chat, messages }) {
 		setShowEmojiPicker(!showEmojiPicker);
 	};
 
+	const [showAttachFile, setShowAttachFile] = useState(false);
+	const handleFileUpload = (e) => {
+		const file = e.target.files[0];
+		// upload file to firebase storage
+		// get the download url
+		// send the message with the download url
+		const fileRef = ref(storage, `chats/${router.query.id}/${file.name}`);
+		uploadBytes(fileRef, file).then((snapshot) => {
+			getDownloadURL(snapshot.ref).then((url) => {
+				addDoc(collection(db, "chats", router.query.id, "messages"), {
+					timestamp: serverTimestamp(),
+					message: url,
+					user: user.email,
+					photoURL: user.photoURL,
+					fileName: file.name,
+				});
+			});
+		});
+	};
+
+
 	return (
 		<Container>
 			<Header>
@@ -141,7 +164,8 @@ function ChatScreen({ chat, messages }) {
 					<p>{lastSeen}</p>
 				</HeaderInformation>
 				<HeaderIcons>
-					<IconButton>
+					<IconButton aria-label="upload" component="label">
+						<input hidden accept="image/*" type="file" onChange={handleFileUpload}/>
 						<AttachFile />
 					</IconButton>
 					<IconButton>

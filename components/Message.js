@@ -8,10 +8,16 @@ function Message({ user, message }) {
 
 	const TypeOfMessage = user === userLoggedIn.email ? Sender : Reciever;
 
+	
+
 	return (
 		<Container>
 			<TypeOfMessage>
-				{message.message}
+				{message.message && message.message.includes("http") ? (
+					<img width={400} src={message.message} />
+				) : (
+					message.message
+				)}
 
 				<span>
 					{message.timestamp
