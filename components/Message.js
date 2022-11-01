@@ -14,7 +14,7 @@ function Message({ user, message }) {
 		<Container>
 			<TypeOfMessage>
 				{message.message && message.message.includes("http") ? (
-					<img width={400} src={message.message} />
+					<MessageImage width={400} src={message.message} />
 				) : (
 					message.message
 				)}
@@ -43,6 +43,13 @@ const MessageElement = styled.p`
 	position: relative;
 	text-align: right;
 `;
+
+const MessageImage = styled.img`
+	width: 100%;
+	max-width: 400px;
+	max-height: 400px;
+`;
+
 
 const Sender = styled(MessageElement)`
 	margin-left: auto;
