@@ -1,13 +1,15 @@
 import { db, auth } from '../firebase'
 import { signOut } from "firebase/auth";
 import styled from 'styled-components'
-import { Avatar, IconButton, Button } from '@material-ui/core'
+import { Avatar, IconButton, Button, Menu, MenuItem } from '@material-ui/core'
 import { Chat, DonutLarge, MoreVert, SearchOutlined } from '@material-ui/icons'
 import * as EmailValidator from 'email-validator'
 import { doc, collection, addDoc, where, query } from "firebase/firestore";
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import ChatWrapper from './ChatWrapper'
+import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 function Sidebar() {
 	const [user] = useAuthState(auth);
@@ -30,23 +32,59 @@ function Sidebar() {
 
 	};
 
+	
+
 	const chatAlreadyExists = (recipientEmail) =>
 		!!chatsSnapshot?.docs.find(
 			(chat) => chat.data().users.find((user) => user === recipientEmail)?.length > 0
 		);
 	
+	const [anchorEl, setAnchorEl] = useState(null);
+	const open = Boolean(anchorEl);
+	const handleMoreClick = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const router = useRouter();
+	const goToHome = () => {
+		router.push('/');
+	}
+
 	return (
 		<Container>
 			<Header>
-				<UserAvatar src={user.photoURL} onClick={() => signOut(auth)} />
+				<UserAvatar src={user.photoURL} onClick={goToHome} />
 				<IconsContainer>
-					<IconButton>
+					<IconButton
+						onClick={createChat}
+					>
 						<Chat/>
 					</IconButton>
 
-					<IconButton>
+					<IconButton
+						id="more-button"
+						aria-controls={open ? 'basic-menu' : undefined}
+						aria-haspopup="true"
+						arai-expanded={open ? 'true' : undefined}
+						onClick={handleMoreClick}
+						>
 						<MoreVert/>
 					</IconButton>
+					<Menu
+						id="basic-menu"
+						anchorEl={anchorEl}
+						open={open}
+						onClose={handleClose}
+						MenuListProps={{
+						  'aria-labelledby': 'more-button',
+						}}
+					  >
+					<MenuItem onClick={goToHome}>Home</MenuItem>
+					<MenuItem onClick={() => signOut(auth)} >Logout</MenuItem>
+				  </Menu>
 				</IconsContainer>
 			</Header>
 

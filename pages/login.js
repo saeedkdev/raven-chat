@@ -14,6 +14,7 @@ function Login() {
 	  <Container>
 		<Head>
 			<title>Login</title>
+			<link rel="icon" href="/raven.png" />
 		</Head>
 
 		<LoginContainer>
